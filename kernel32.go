@@ -347,6 +347,23 @@ func WriteProcessMemory(hProcess HANDLE, lpBaseAddress uint32, data []byte, size
 	return
 }
 
+func WriteProcessMemorySigned(hProcess HANDLE, lpBaseAddress uintptr, data []int8, size uint) (err error) {
+	var numBytesRead uintptr
+
+	ret, _, err := procWriteProcessMemory.Call(uintptr(hProcess),
+		uintptr(lpBaseAddress),
+		uintptr(unsafe.Pointer(&data[0])),
+		uintptr(size),
+		uintptr(unsafe.Pointer(&numBytesRead)))
+
+	if ret == 0 {
+		return
+	}
+
+	err = nil
+	return
+}
+
 //Write process memory with a source of uint32
 func WriteProcessMemoryAsUint32(hProcess HANDLE, lpBaseAddress uint32, data uint32) (err error) {
 
@@ -411,7 +428,7 @@ func GetCurrentProcess() (pseudoHandle HANDLE, err error) {
 	return
 }
 
-func Process32First(snapshot HANDLE, procEntry *PROCESSENTRY32)(err error) {
+func Process32First(snapshot HANDLE, procEntry *PROCESSENTRY32) (err error) {
 	_snapshot := syscall.Handle(snapshot)
 	//var _procEntry *syscall.ProcessEntry32
 
@@ -422,7 +439,7 @@ func Process32First(snapshot HANDLE, procEntry *PROCESSENTRY32)(err error) {
 	return
 }
 
-func Process32Next(snapshot HANDLE, procEntry *PROCESSENTRY32)(err error) {
+func Process32Next(snapshot HANDLE, procEntry *PROCESSENTRY32) (err error) {
 	_snapshot := syscall.Handle(snapshot)
 	//var _procEntry *syscall.ProcessEntry32
 
@@ -432,5 +449,3 @@ func Process32Next(snapshot HANDLE, procEntry *PROCESSENTRY32)(err error) {
 
 	return
 }
-
-
