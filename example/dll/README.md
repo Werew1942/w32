@@ -1,1 +1,0 @@
-The example/dll directory is a test bench learning how to create and load DLLs beyond the win32 native dlls. Currently, there are difficulties creating a DLL from Go.
